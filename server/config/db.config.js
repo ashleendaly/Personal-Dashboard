@@ -1,14 +1,6 @@
 module.exports = {
-    HOST: "localhost",
-    USER: "root",
-    PASSWORD: "Wh@t3v3r123",
-    DB: "dashboard",
-    dialect: "mysql",
-    pool: {
-      max: 5,
-      min: 0,
-      acquire: 30000,
-      idle: 10000
-    }
-  };
-  
+  HOST: "eu-cdbr-west-03.cleardb.net",
+  USER: "bf6801fd4e9a15",
+  PASSWORD: "705bca99",
+  DB: "heroku_22fb24ce8d51f97",
+};
