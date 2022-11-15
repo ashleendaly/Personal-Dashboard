@@ -38,17 +38,17 @@ export default class Dashboard extends Component {
       <>
         {currentUser ? (
           <div className="h-full">
-            <h1 className="flex text-6xl font-semibold text-white flex justify-center items-center">
+            <h1 className="-mt-16 flex text-6xl font-semibold text-white flex justify-center items-center">
               Good day Swapnil
             </h1>
 
-            <div className="flex justify-evenly items-center w-screen mt-20">
+            <div className="flex justify-evenly items-center w-max h-3/6 gap-7 mt-8">
               <WeatherCard />
               <NewsCard />
               <ClothesCard />
             </div>
 
-            <div className="flex justify-center items-end -mt-72 h-full text-white text-2xl">
+            <div className="flex justify-center items-center mt-1 text-white font-bold text-lg">
               <a href="/" onClick={this.logOut}>
                 Sign Out
               </a>

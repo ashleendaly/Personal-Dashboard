@@ -5,6 +5,7 @@ import AuthService from "./services/auth.service";
 import Login from "./components/login";
 import Register from "./components/register";
 import Dashboard from "./components/dashboard";
+import News from "./components/news/News";
 
 class App extends Component {
   constructor(props) {
@@ -41,6 +42,7 @@ class App extends Component {
             <Route path="/" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/news" element={<News />} />
           </Routes>
         </div>
       </div>

@@ -3,7 +3,7 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
-import RegisterButton from "../buttons/register_button.png";
+import RegisterButton from "../assets/register_button.png";
 
 import AuthService from "../services/auth.service";
 

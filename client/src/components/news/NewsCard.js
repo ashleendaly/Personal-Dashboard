@@ -47,7 +47,7 @@ export default class NewsCard extends Component {
           <h1 className="flex justify-center h-12  items-center font-semibold text-black  bg-yellow-200">
             News
           </h1>
-          <h3 className="flex flex-col text-center h-28 items-center pt-3 px-5 bg-white/50">
+          <h3 className="flex flex-col text-center h-52 items-center pt-16 px-5 bg-white/50">
             {this.state.recentNews.title}
             <Link className="font-semibold" to={"/news"}>
               Read more...

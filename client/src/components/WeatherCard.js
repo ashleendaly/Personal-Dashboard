@@ -56,8 +56,8 @@ export class WeatherCard extends Component {
           <h1 className="flex justify-center h-12 items-center font-semibold text-black  bg-yellow-200">
             Weather
           </h1>
-          <div className="flex flex-col h-28 justify-center items-center pt-3 px-5 bg-white/50">
-            <div className="flex gap-4  -mt-6">
+          <div className="flex flex-col h-52 justify-center items-center px-5 bg-white/50">
+            <div className="flex gap-4 -mt-12">
               <img
                 className=""
                 src={`http://openweathermap.org/img/w/${icon}.png`}

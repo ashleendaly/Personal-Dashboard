@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
-import LoginButton from "../buttons/login_button.png";
+import LoginButton from "../assets/login_button.png";
 import { Link } from "react-router-dom";
 
 import AuthService from "../services/auth.service";
