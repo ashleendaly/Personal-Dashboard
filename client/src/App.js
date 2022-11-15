@@ -1,62 +1,51 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
-import axios from 'axios';
+import React, { Component } from "react";
+import { Routes, Route } from "react-router-dom";
+import AuthService from "./services/auth.service";
 
-import Login from './components/Login';
-import Dashboard from './components/Dashboard';
+import Login from "./components/login";
+import Register from "./components/register";
+import Dashboard from "./components/dashboard";
 
-import PrivateRoute from './utils/PrivateRoute';
-import PublicRoute from './utils/PublicRoute';
-import { getToken, removeUserSession, setUserSession } from './utils/Common';
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.logOut = this.logOut.bind(this);
 
-function App() {
-  const [authLoading, setAuthLoading] = useState(true);
-
-  useEffect(() => {
-    const token = getToken();
-    if (!token) {
-      return;
-    }
-
-    axios.get(`/verifyToken?token=${token}`).then(response => {
-      setUserSession(response.data.token, response.data.user);
-      setAuthLoading(false);
-    }).catch(error => {
-      removeUserSession();
-      setAuthLoading(false);
-    });
-  }, []);
-
-  if (authLoading && getToken()) {
-    return <div className='content'> Checking Authentication...</div>
+    this.state = {
+      currentUser: undefined,
+    };
   }
 
-  return (
-    <div className='App'>
-      <BrowserRouter>
-        <div>
-          <div className="header">
-            <NavLink to="/">Login</NavLink><small>(Access without token only)</small>
-            <NavLink to="/dashboard">Dashboard</NavLink><small>(Access with token only)</small>
-          </div>
-          <div className='content'>
-            <Routes>
-              <Route path="/" element={
-                <PublicRoute>
-                  <Login />
-                </PublicRoute>
-              } />
-              <Route path="/dashboard" element={
-                <PrivateRoute>
-                  <Dashboard />
-                </PrivateRoute>
-              } />
-            </Routes>
-          </div>
+  componentDidMount() {
+    const user = AuthService.getCurrentUser();
+
+    if (user) {
+      this.setState({
+        currentUser: user,
+      });
+    }
+  }
+
+  logOut() {
+    AuthService.logout();
+    this.setState({
+      currentUser: undefined,
+    });
+  }
+
+  render() {
+    return (
+      <div className="bg-therapy-box bg-cover w-full h-screen flex justify-center">
+        <div className="h-full py-20">
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Routes>
         </div>
-      </BrowserRouter>
-    </div>
-  )
+      </div>
+    );
+  }
 }
 
-export default App
+export default App;

@@ -1,55 +1,151 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { setUserSession } from '../utils/Common';
+import React, { Component } from "react";
+import Form from "react-validation/build/form";
+import Input from "react-validation/build/input";
+import CheckButton from "react-validation/build/button";
+import LoginButton from "../buttons/login_button.png";
+import { Link } from "react-router-dom";
 
-function Login(props) {
-    const [loading, setLoading] = useState(false);
-    const username = useFormInput('');
-    const password = useFormInput('');
-    const [error, setError] = useState(null);
+import AuthService from "../services/auth.service";
 
-    // handle button click of login form
-    const handleLogin = () => {
-        setError(null);
-        setLoading(true);
-        axios.post('/users/signin', { username: username.value, password: password.value }).then(response => {
-            setLoading(false);
-            setUserSession(response.data.token, response.data.user);
-            props.history.push('/dashboard');
-        }).catch(error => {
-            setLoading(false);
-            if (error.response.status === 401) setError(error.response.data.message);
-            else setError("Something went wrong. Please try again later.");
-        })
-    }
+import { withRouter } from "../common/with-router";
 
+const required = (value) => {
+  if (!value) {
     return (
-        <div>
-            Login <br /><br />
-            <div>
-                Username <br />
-                <input type="text" {...username} autoComplete="new-password" />
-            </div>
-            <div style={{ marinTop: 10 }}>
-                Password<br />
-                <input type="password" {...password} autoComplete="new-password" />
-            </div>
-            {error && <><small style={{ color: "red"}}>{error}</small><br /></>}<br />
-            <input type="button" value={loading ? "Loading...": 'Login'} onClick={handleLogin} disabled={loading} /><br />
-        </div>
+      <div className="alert alert-danger" role="alert">
+        This field is required!
+      </div>
     );
+  }
+};
+
+class Login extends Component {
+  constructor(props) {
+    super(props);
+    this.handleLogin = this.handleLogin.bind(this);
+    this.onChangeUsername = this.onChangeUsername.bind(this);
+    this.onChangePassword = this.onChangePassword.bind(this);
+
+    this.state = {
+      username: "",
+      password: "",
+      loading: false,
+      message: "",
+    };
+  }
+
+  onChangeUsername(e) {
+    this.setState({
+      username: e.target.value,
+    });
+  }
+
+  onChangePassword(e) {
+    this.setState({
+      password: e.target.value,
+    });
+  }
+
+  handleLogin(e) {
+    e.preventDefault();
+
+    this.setState({
+      message: "",
+      loading: true,
+    });
+
+    this.form.validateAll();
+
+    if (this.checkBtn.context._errors.length === 0) {
+      AuthService.login(this.state.username, this.state.password).then(
+        () => {
+          this.props.router.navigate("/dashboard");
+          window.location.reload();
+        },
+        (error) => {
+          const resMessage =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+
+          this.setState({
+            loading: false,
+            message: resMessage,
+          });
+        }
+      );
+    } else {
+      this.setState({
+        loading: false,
+      });
+    }
+  }
+
+  render() {
+    return (
+      <Form
+        className="h-full w-screen"
+        onSubmit={this.handleLogin}
+        ref={(c) => {
+          this.form = c;
+        }}
+      >
+        <h1 className="flex font-semibold text-6xl text-white flex justify-center items-center">
+          Dev Challenge
+        </h1>
+
+        <div className="flex pt-20 justify-evenly">
+          <Input
+            type="text"
+            className="h-16 w-80 text-3xl border-b-2 bg-inherit placeholder-white"
+            placeholder="Username"
+            name="username"
+            value={this.state.username}
+            onChange={this.onChangeUsername}
+            validations={[required]}
+          />
+
+          <Input
+            type="password"
+            className="h-16 w-80 text-3xl border-b-2 bg-inherit placeholder-white"
+            placeholder="Password"
+            name="password"
+            value={this.state.password}
+            onChange={this.onChangePassword}
+            validations={[required]}
+          />
+        </div>
+
+        <div className="flex justify-center items-end h-full -mt-64">
+          <button disabled={this.state.loading}>
+            {this.state.loading && <span></span>}
+            <img src={LoginButton} alt="login" width="350px"></img>
+          </button>
+        </div>
+
+        {this.state.message && (
+          <div>
+            <div role="alert">{this.state.message}</div>
+          </div>
+        )}
+        <CheckButton
+          style={{ display: "none" }}
+          ref={(c) => {
+            this.checkBtn = c;
+          }}
+        />
+
+        <div className="flex justify-center items-center">
+          <h1 className="text-4xl text-white mt-5"> New to the challenge?</h1>
+          <Link className="text-4xl text-yellow-200 mt-5 ml-2" to={"/register"}>
+            Sign Up
+          </Link>
+        </div>
+      </Form>
+    );
+  }
 }
 
-const useFormInput = initialValue => {
-    const [value, setValue] = useState(initialValue);
-
-    const handleChange = e => {
-        setValue(e.target.value);
-    }
-    return {
-        value,
-        onChange: handleChange
-    }
-}
-
-export default Login;
+export default withRouter(Login);
